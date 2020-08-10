@@ -13,12 +13,41 @@ import pymysql
 # Importing tkinter
 import tkinter as tk
 
+
+# Declare functions
+def submit(carMake: str, carModel: str, carYear: str, salesPerson: str, salesPrice: str):
+    """Function for submit button action. Submits entries into sql database
+    :param carMake: Make of car
+    :param carModel: Model of car
+    :param carYear: Year of manufacture
+    :param salesPerson: Who sold the car
+    :param salesPrice: The price sold
+    """
+    # Connect to local database c4v
+    connection = pymysql.connect('localhost', 'root', '', 'c4v')
+
+    # Create cursor object
+    cursor = connection.cursor()
+
+    # SQL insert statement into assignment4 table
+    sql = "INSERT INTO assignment4 (carMake, carModel, carYear, salesPerson, salesPrice) VALUES " \
+          "(%s, %s, %s, %s, %s)"
+
+    # Execute sql statement
+    cursor.execute(sql, (carMake, carModel, carYear, salesPerson, salesPrice))
+
+    # Commit insert change to database
+    connection.commit()
+
+    # Close connection
+    connection.close()
+
+    print(f"The {carYear} {carMake} {carModel}, sold by {salesPerson}, for ${salesPrice}")
+
+
 # Declare constants
 HEIGHT = 500
 WIDTH = 600
-
-# Connect to local database c4v
-connection = pymysql.connect('localhost', 'root', '', 'c4v')
 
 # Initialize the root object. All the widget will go within this root object.
 root = tk.Tk()
@@ -31,7 +60,7 @@ canvas.pack()
 root.wm_title("Car Sales Register")
 
 # Create background image
-background_image = tk.PhotoImage(file="yellow_car_toy.png")
+background_image = tk.PhotoImage(file="yellowcar.png")
 background_label = tk.Label(root, image=background_image)
 background_label.place(relwidth=1, relheight=1)
 
@@ -100,25 +129,20 @@ salesPriceEntry.place(relwidth=0.65, relheight=1)
 salesPriceLabel = tk.Label(salesPriceFrame, text="Sale Price", bd=5)
 salesPriceLabel.place(relx=0.8, relwidth=0.2, relheight=1)
 
-# Sales Number
-# Create frame
-salesNumFrame = tk.Frame(root, bg="#80c1ff", bd=5)
-salesNumFrame.place(relx=0.5, rely=0.6, relwidth=0.75, relheight=0.1, anchor="n")
-
-# Create entry
-salesNumEntry = tk.Entry(salesNumFrame, font=40)
-salesNumEntry.place(relwidth=0.65, relheight=1)
-
-# Label
-salesNumLabel = tk.Label(salesNumFrame, text="Sale Number", bd=5)
-salesNumLabel.place(relx=0.8, relwidth=0.2, relheight=1)
 
 # Add a button
 # Create Frame
 buttonFrame = tk.Frame(root, bg="black", bd=5)
-buttonFrame.place(relx=0.5, rely=0.7, relwidth=0.75, relheight=0.1, anchor="n")
-button = tk.Button(buttonFrame, text="Submit", font=40, )
+buttonFrame.place(relx=0.5, rely=0.6, relwidth=0.75, relheight=0.1, anchor="n")
+button = tk.Button(buttonFrame, text="Submit", font=40, command=lambda: submit(carMakeEntry.get(),
+                                                                               carModelEntry.get(),
+                                                                               salesPersonEntry.get(),
+                                                                               carYearEntry.get(),
+                                                                               salesPriceEntry.get()))
 button.place(relwidth=1, relheight=1)
+
+# Add response frame
+
 
 
 # Initialize the main root.
