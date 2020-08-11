@@ -42,7 +42,8 @@ def submit(carMake: str, carModel: str, carYear: str, salesPerson: str, salesPri
     # Close connection
     connection.close()
 
-    print(f"The {carYear} {carMake} {carModel}, sold by {salesPerson}, for ${salesPrice}")
+    # Response text
+    responseLabel["text"] = "The %s %s %s, sold by %s, for $%s has been saved to the database" % (carYear, carMake, carModel, salesPerson, salesPrice)
 
 
 # Declare constants
@@ -142,8 +143,10 @@ button = tk.Button(buttonFrame, text="Submit", font=40, command=lambda: submit(c
 button.place(relwidth=1, relheight=1)
 
 # Add response frame
-
-
+responseFrame = tk.Frame(root, bg="#80c1ff", bd=5)
+responseFrame.place(relx=0.5, rely=0.7, relwidth=0.75, relheight=0.1, anchor="n")
+responseLabel = tk.Label(responseFrame)
+responseLabel.place(relwidth=1, relheight=1)
 
 # Initialize the main root.
 root.mainloop()
